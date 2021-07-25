@@ -20,6 +20,9 @@ Currently, Portecle can be used to, for example:
 - Change the password of key pair entries and keystores.
 - Delete, clone, and rename keystore entries.
 - View the details of certificate revocation list (CRL) files.
+- Generate SM2 key pair entries with self-signed X.509 certificates.
+- Generate SM2 PKCS10 certificates request.
+- Support SM2 Certificate Authority (CA) replies.
 
 Getting up and running with Portecle is quick and easy.  Everything
 you need to know is detailed below. Being written in Java, Portecle
