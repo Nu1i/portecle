@@ -37,6 +37,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Security;
 import java.security.SignatureException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
@@ -64,6 +65,7 @@ import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.ContentVerifierProvider;
@@ -81,6 +83,12 @@ import net.sf.portecle.NetUtil;
  */
 public final class X509CertUtil
 {
+	static
+	{
+		Security.removeProvider("SunEC");
+		Security.addProvider(new BouncyCastleProvider());
+	}
+
 	/** PKCS #7 encoding name */
 	private static final String PKCS7_ENCODING = "PKCS7";
 
@@ -540,8 +548,22 @@ public final class X509CertUtil
 				    new GeneralNames(sans.toArray(new GeneralName[sans.size()])));
 			}
 
-			ContentSigner signer = new JcaContentSignerBuilder(signatureType.name()).build(privateKey);
+			ContentSigner signer;
+
+			if (signatureType.name() == "SM3withSM2")
+			{
+
+				signer = new JcaContentSignerBuilder("SM3withSM2").setProvider("BC").build(privateKey);
+			}
+			else
+			{
+				signer = new JcaContentSignerBuilder(signatureType.name()).build(privateKey);
+			}
+			// ContentSigner signer = new JcaContentSignerBuilder(signatureType.name()).build(privateKey);
+
 			X509CertificateHolder certHolder = certBuilder.build(signer);
+
+			// System.out.println("Signer:" + signatureType.name());
 
 			return new JcaX509CertificateConverter().getCertificate(certHolder);
 		}
@@ -724,7 +746,18 @@ public final class X509CertUtil
 
 		JcaPKCS10CertificationRequestBuilder csrBuilder =
 		    new JcaPKCS10CertificationRequestBuilder(subject, cert.getPublicKey());
-		JcaContentSignerBuilder signerBuilder = new JcaContentSignerBuilder(cert.getSigAlgName());
+
+		JcaContentSignerBuilder signerBuilder;
+		if (cert.getSigAlgName().equals("1.2.156.10197.1.501"))
+		{
+			signerBuilder = new JcaContentSignerBuilder("SM3withSM2");
+		}
+		else
+		{
+			signerBuilder = new JcaContentSignerBuilder(cert.getSigAlgName());
+		}
+
+		// JcaContentSignerBuilder signerBuilder = new JcaContentSignerBuilder("SM3withSM2");
 
 		try
 		{

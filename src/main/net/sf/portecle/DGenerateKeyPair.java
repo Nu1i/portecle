@@ -65,6 +65,9 @@ class DGenerateKeyPair
 	/** Radio button for the DSA key algorithm */
 	private JRadioButton m_jrbDSA;
 
+	/** Radio button for the SM2 key algorithm */
+	private JRadioButton m_jrbSM2;
+
 	/** Key size combo box */
 	private JComboBox<String> m_jcbKeySize;
 
@@ -91,15 +94,23 @@ class DGenerateKeyPair
 	private void initComponents()
 	{
 		JLabel jlKeyAlg = new JLabel(RB.getString("DGenerateKeyPair.jlKeyAlg.text"));
+
 		m_jrbDSA = new JRadioButton(RB.getString("DGenerateKeyPair.m_jrbDSA.text"), false);
 		m_jrbDSA.setToolTipText(RB.getString("DGenerateKeyPair.m_jrbDSA.tooltip"));
+
+		m_jrbSM2 = new JRadioButton(RB.getString("DGenerateKeyPair.m_jrbSM2.text"), false);
+		m_jrbSM2.setToolTipText(RB.getString("DGenerateKeyPair.m_jrbSM2.tooltip"));
+
 		JRadioButton jrbRSA = new JRadioButton(RB.getString("DGenerateKeyPair.m_jrbRSA.text"), false);
 		jrbRSA.setToolTipText(RB.getString("DGenerateKeyPair.m_jrbRSA.tooltip"));
+
 		ButtonGroup buttonGroup = new ButtonGroup();
+		buttonGroup.add(m_jrbSM2);
 		buttonGroup.add(m_jrbDSA);
 		buttonGroup.add(jrbRSA);
 
 		JPanel jpKeyAlg = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		jpKeyAlg.add(m_jrbSM2);
 		jpKeyAlg.add(m_jrbDSA);
 		jpKeyAlg.add(jrbRSA);
 
@@ -130,6 +141,11 @@ class DGenerateKeyPair
 					keySizesKey = "DGenerateKeyPair.DsaKeySizes";
 					defaultSizeKey = "DGenerateKeyPair.DefaultDsaKeySize";
 				}
+				else if (m_jrbSM2.isSelected())
+				{
+					keySizesKey = "DGenerateKeyPair.SM2KeySizes";
+					defaultSizeKey = "DGenerateKeyPair.DefaultSM2KeySize";
+				}
 				Object oldItem = m_jcbKeySize.getSelectedItem();
 				boolean selectionKept = false;
 				m_jcbKeySize.removeAllItems();
@@ -149,6 +165,7 @@ class DGenerateKeyPair
 			}
 		};
 		m_jrbDSA.addChangeListener(keyAlgListener);
+		m_jrbSM2.addChangeListener(keyAlgListener);
 		jrbRSA.addChangeListener(keyAlgListener);
 		jrbRSA.setSelected(true);
 
@@ -226,6 +243,10 @@ class DGenerateKeyPair
 		{
 			m_keyPairType = KeyPairType.DSA;
 		}
+		else if (m_jrbSM2.isSelected())
+		{
+			m_keyPairType = KeyPairType.SM2;
+		}
 		else
 		{
 			m_keyPairType = KeyPairType.RSA;
@@ -272,7 +293,7 @@ class DGenerateKeyPair
 			    getTitle(), JOptionPane.WARNING_MESSAGE);
 			return BAD_KEYSIZE;
 		}
-		else if (iKeySize < 512)
+		else if (iKeySize < 256)
 		{
 			JOptionPane.showMessageDialog(this, RB.getString("DGenerateKeyPair.UnsupportedRsaKeySize.message"),
 			    getTitle(), JOptionPane.WARNING_MESSAGE);

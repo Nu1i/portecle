@@ -41,6 +41,7 @@ import net.sf.portecle.PortecleJDialog;
 /**
  * Modal dialog used for entering a masked password.
  */
+@SuppressWarnings("deprecation")
 public class DGetPassword
     extends PortecleJDialog
     implements PasswordFinder

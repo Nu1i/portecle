@@ -23,6 +23,8 @@
 
 package net.sf.portecle;
 
+import static java.util.Arrays.asList;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -147,11 +149,10 @@ import net.sf.portecle.gui.password.DGetPassword;
 import net.sf.portecle.gui.statusbar.StatusBar;
 import net.sf.portecle.gui.statusbar.StatusBarChangeHandler;
 
-import static java.util.Arrays.asList;
-
 /**
  * Start class and main frame of Portecle.
  */
+@SuppressWarnings("deprecation")
 public class FPortecle
     extends JFrame
     implements StatusBar
@@ -411,11 +412,9 @@ public class FPortecle
 
 	private void setApplicationIcon()
 	{
-		setIconImages(asList(getResImage("FPortecle.Icon.image.16"),
-				getResImage("FPortecle.Icon.image.32"),
-				getResImage("FPortecle.Icon.image.64"),
-				getResImage("FPortecle.Icon.image.96"),
-				getResImage("FPortecle.Icon.image.128")));
+		setIconImages(asList(getResImage("FPortecle.Icon.image.16"), getResImage("FPortecle.Icon.image.32"),
+		    getResImage("FPortecle.Icon.image.64"), getResImage("FPortecle.Icon.image.96"),
+		    getResImage("FPortecle.Icon.image.128")));
 		AppleApplicationHelper appleApplicationHelper = new AppleApplicationHelper();
 		if (appleApplicationHelper.isAppleEnvironment())
 		{

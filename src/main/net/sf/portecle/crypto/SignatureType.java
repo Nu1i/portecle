@@ -79,7 +79,10 @@ public enum SignatureType
 	/** SHA-384 with ECDSA Signature Type */
 	SHA384withECDSA(X9ObjectIdentifiers.ecdsa_with_SHA384.getId()),
 	/** SHA-512 with ECDSA Signature Type */
-	SHA512withECDSA(X9ObjectIdentifiers.ecdsa_with_SHA512.getId());
+	SHA512withECDSA(X9ObjectIdentifiers.ecdsa_with_SHA512.getId()),
+
+	SM3withSM2("1.2.156.10197.1.501");
+	// SM3withSM2(X9ObjectIdentifiers.prime256v1.getId());
 
 	/** OID-to-type map */
 	private static final Map<String, SignatureType> OID_MAP;
@@ -109,6 +112,8 @@ public enum SignatureType
 
 		kpMap.put(KeyPairType.ECDSA, Collections.unmodifiableSet(
 		    EnumSet.of(SHA1withECDSA, SHA224withECDSA, SHA256withECDSA, SHA384withECDSA, SHA512withECDSA)));
+
+		kpMap.put(KeyPairType.SM2, Collections.unmodifiableSet(EnumSet.of(SM3withSM2)));
 
 		KEYPAIR_MAP = Collections.unmodifiableMap(kpMap);
 	}
@@ -152,6 +157,8 @@ public enum SignatureType
 				return SHA1withDSA;
 			case ECDSA:
 				return SHA1withECDSA;
+			case SM2:
+				return SM3withSM2;
 			default:
 				return null;
 		}

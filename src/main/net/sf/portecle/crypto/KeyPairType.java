@@ -34,5 +34,7 @@ public enum KeyPairType
 	/** DSA key pair type. */
 	DSA,
 	/** ECDSA key pair type. */
-	ECDSA;
+	ECDSA,
+	/** SM2 key pair type. */
+	SM2;
 }

@@ -24,12 +24,15 @@ package net.sf.portecle.crypto;
 
 import static net.sf.portecle.FPortecle.RB;
 
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidParameterException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.security.interfaces.DSAKey;
 import java.security.interfaces.ECKey;
 import java.security.interfaces.RSAKey;
@@ -43,12 +46,20 @@ import org.bouncycastle.crypto.params.DHKeyParameters;
 import org.bouncycastle.crypto.params.DSAKeyParameters;
 import org.bouncycastle.crypto.params.ECKeyParameters;
 import org.bouncycastle.crypto.params.RSAKeyParameters;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jce.spec.ECNamedCurveGenParameterSpec;
 
 /**
  * Provides utility methods for the generation of keys.
  */
 public final class KeyPairUtil
 {
+	static
+	{
+		Security.removeProvider("SunEC");
+		Security.addProvider(new BouncyCastleProvider());
+	}
+
 	/** Logger */
 	private static final Logger LOG = Logger.getLogger(KeyPairUtil.class.getName());
 
@@ -70,20 +81,34 @@ public final class KeyPairUtil
 	 * @param iKeySize Key size of key pair
 	 * @return A key pair
 	 * @throws CryptoException If there was a problem generating the key pair
+	 * @throws NoSuchProviderException
+	 * @throws InvalidAlgorithmParameterException
 	 */
 	public static KeyPair generateKeyPair(KeyPairType keyPairType, int iKeySize)
-	    throws CryptoException
+	    throws CryptoException, NoSuchProviderException, InvalidAlgorithmParameterException
 	{
+		KeyPairGenerator keyPairGen;
 		try
 		{
-			KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(keyPairType.name());
+			if (keyPairType.name() == "SM2")
+			{
+				keyPairGen = KeyPairGenerator.getInstance("EC", "BC");
+				keyPairGen.initialize(new ECNamedCurveGenParameterSpec("sm2p256v1"));
+				// System.out.println("SM2KEY");
 
-			// Create a SecureRandom
-			SecureRandom rand = SecureRandom.getInstance("SHA1PRNG");
+			}
+			else
+			{
+				keyPairGen = KeyPairGenerator.getInstance(keyPairType.name());
 
-			// Initialize key pair generator with key strength and a randomness
-			keyPairGen.initialize(iKeySize, rand);
+				// Create a SecureRandom
+				SecureRandom rand = SecureRandom.getInstance("SHA1PRNG");
 
+				// Initialize key pair generator with key strength and a randomness
+				keyPairGen.initialize(iKeySize, rand);
+				// System.out.println("OTHERKEY");
+			}
+			// System.out.println(keyPairType.name());
 			// Generate and return the key pair
 			return keyPairGen.generateKeyPair();
 		}

@@ -32,7 +32,8 @@ import java.util.HashMap;
 public enum AlgorithmType
 {
 	DSA("1.2.840.10040.4.1"),
-	RSA("1.2.840.113549.1.1.1");
+	RSA("1.2.840.113549.1.1.1"),
+	SM2("1.2.156.10197.1.501");
 
 	/** OID-to-type map */
 	private static final HashMap<String, AlgorithmType> OID_MAP = new HashMap<>();

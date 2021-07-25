@@ -59,6 +59,7 @@ import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
  * Provides utility methods for loading/saving keystores. The Bouncy Castle provider must be registered before using
  * this class to create or load BKS, UBER, or BCFKS type keystores.
  */
+@SuppressWarnings("deprecation")
 public final class KeyStoreUtil
 {
 	/**

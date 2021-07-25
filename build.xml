@@ -2,7 +2,7 @@
 
 <project name="portecle" basedir="." default="jar" xmlns:p="urn:net.sf.portecle">
 
-  <property name="version" value="1.11" />
+  <property name="version" value="1.12" />
   <property name="helpbaseurl.default" value="/doc" />
 
   <property file="build.properties" />
@@ -11,7 +11,7 @@
   To build portecle.jar with no Class-Path MANIFEST.MF attribute,
   set jar.classpath to an empty value in build.properties or command line.
   -->
-  <property name="jar.classpath" value="bcprov.jar bcpkix.jar" />
+  <property name="jar.classpath" value="bcprov.jar bcpkix.jar bcutil.jar" />
 
   <property name="helpbaseurl" value="${helpbaseurl.default}" />
 
@@ -24,14 +24,15 @@
   <property name="jar" value="portecle.jar" />
   <property name="doc" value="${root}/doc" />
 
-  <property name="bcprov.jar" value="${lib}/bcprov-jdk15on-162.jar" />
-  <property name="bcpkix.jar" value="${lib}/bcpkix-jdk15on-162.jar" />
+  <property name="bcprov.jar" value="${lib}/bcprov-jdk15on-169.jar" />
+  <property name="bcpkix.jar" value="${lib}/bcpkix-jdk15on-169.jar" />
+  <property name="bcutil.jar" value="${lib}/bcutil-jdk15on-169.jar" />
   <property name="pack200.jar" value="${lib}/deployment-ant-pack200-1.0.jar"/>
 
   <property name="build.debug" value="true" />
   <property name="build.debuglevel" value="lines,source" />
-  <property name="build.srcver" value="1.7" />
-  <property name="build.targetver" value="1.7" />
+  <property name="build.srcver" value="1.8" />
+  <property name="build.targetver" value="1.8" />
   <property name="build.encoding" value="UTF-8" />
 
   <property name="apiurl.java" value="https://docs.oracle.com/javase/7/docs/api/"/>
@@ -46,6 +47,7 @@
   <path id="build.classpath">
     <pathelement location="${bcprov.jar}" />
     <pathelement location="${bcpkix.jar}" />
+  	<pathelement location="${bcutil.jar}" />
   </path>
 
   <typedef resource="org/jdesktop/deployment/ant/pack200/antlib.xml"
@@ -169,6 +171,7 @@
 
     <copy file="${bcprov.jar}" tofile="${build}/webstart/bcprov.jar"/>
     <copy file="${bcpkix.jar}" tofile="${build}/webstart/bcpkix.jar"/>
+  	<copy file="${bcutil.jar}" tofile="${build}/webstart/bcutil.jar"/>
     <!--
         Note: digestalg needs to stay the same as it already is in these
         jars to avoid verification errors:
@@ -179,6 +182,7 @@
     </p:signjar>
     <length property="bcjarsize" file="${build}/webstart/bcprov.jar" />
     <length property="bcxjarsize" file="${build}/webstart/bcpkix.jar" />
+  	<length property="bcxjarsize" file="${build}/webstart/bcutil.jar" />
 
     <copy file="${src}/etc/portecle.jnlp" tofile="${build}/webstart/APPLICATION_TEMPLATE.JNLP" overwrite="true">
       <filterset>
@@ -238,12 +242,14 @@
       <link href="${apiurl.java}"/>
       <link href="${apiurl.bcprov}"/>
       <link href="${apiurl.bcpkix}"/>
+      <link href="${apiurl.bcutil}"/>
     </javadoc>
   </target>
 
   <target name="run" depends="jar" description="Runs Portecle">
     <copy file="${bcprov.jar}" tofile="${build}/bcprov.jar" />
     <copy file="${bcpkix.jar}" tofile="${build}/bcpkix.jar" />
+  	<copy file="${bcutil.jar}" tofile="${build}/bcutil.jar" />
     <!-- TODO: command line args -->
     <java fork="true" jar="build/${jar}">
       <sysproperty key="portecle.experimental" value="true" />
@@ -267,6 +273,8 @@
         fullpath="portecle-${version}/bcprov.jar" />
       <zipfileset file="${bcpkix.jar}"
         fullpath="portecle-${version}/bcpkix.jar" />
+    	<zipfileset file="${bcutil.jar}"
+    	        fullpath="portecle-${version}/bcutil.jar" />
     </p:zip>
   </target>
 
@@ -303,6 +311,7 @@
     <delete file="${build}/${jar}" />
     <delete file="${build}/bcprov.jar" />
     <delete file="${build}/bcpkix.jar" />
+  	<delete file="${build}/bcutil.jar" />
   </target>
 
   <target name="distclean" depends="clean">
