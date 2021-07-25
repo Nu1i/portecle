@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main"/>
-	<classpathentry kind="lib" path="lib/bcprov-jdk15on-162.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="https://www.bouncycastle.org/docs/docs1.5on/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/bcpkix-jdk15on-162.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="https://www.bouncycastle.org/docs/pkixdocs1.5on/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="lib/deployment-ant-pack200-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/bcpkix-jdk15on-169.jar"/>
+	<classpathentry kind="lib" path="lib/bcprov-jdk15on-169.jar"/>
+	<classpathentry kind="lib" path="lib/bcutil-jdk15on-169.jar"/>
 	<classpathentry kind="output" path="build/eclipse"/>
 </classpath>
